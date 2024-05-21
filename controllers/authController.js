@@ -48,6 +48,7 @@ const userRegister = async (req, res) => {
           message: "User registered successfully!",
           user: user,
           token: token,
+          success: true,
         });
       })
       .catch((err) => {
@@ -87,6 +88,7 @@ const userLogin = async (req, res) => {
       message: "User logged in successfully!",
       user: user,
       token: token,
+      success: true,
     });
   } catch (error) {
     console.log(error);
