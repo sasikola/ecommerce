@@ -7,6 +7,8 @@ const db = require("./db");
 const authRoute = require("./routes/authRoutes");
 const userRoute = require("./routes/userRoutes");
 const adminRoute = require("./routes/adminRoutes");
+const verifyToken = require("./middleware/verifyToken");
+const checkAdmin = require("./middleware/checkAdmin");
 
 dotenv.config();
 const port = process.env.PORT;
@@ -26,10 +28,9 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-app.use("/auth", authRoute)
-app.use("/user", userRoute)
-app.use("/admin", adminRoute)
-
+app.use("/auth", authRoute);
+app.use("/user", verifyToken, userRoute);
+app.use("/admin", verifyToken, checkAdmin, adminRoute);
 
 app.listen(port, () => {
   console.log("Server is running on the port", port);
