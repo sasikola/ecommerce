@@ -1,5 +1,8 @@
+const Cart = require("../models/Cart");
 const Product = require("../models/Product");
+const Review = require("../models/Review");
 const User = require("../models/User");
+const Wishlist = require("../models/Wishlist");
 
 // to get all user information
 const allUsers = async (req, res) => {
@@ -31,7 +34,6 @@ const getSingleUserInfo = async (req, res) => {
 };
 
 // to get all products
-
 const allProducts = async (req, res) => {
   try {
     const products = await Product.find();
@@ -41,6 +43,31 @@ const allProducts = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error!" });
+  }
+};
+
+// update product details
+const updateProductDetails = async (req, res) => {
+  const updateProduct = req.body.productDetails;
+  updateProduct.price = parseFloat(updateProduct.price);
+  updateProduct.rating = parseFloat(updateProduct.rating);
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  if (product) {
+    try {
+      let update = await Product.findByIdAndUpdate(id, { $set: updateProduct });
+      success = true;
+      const findType = await Product.find({ type: "book" }).distinct(
+        "category"
+      );
+
+      res.send({ success, message: "Product updated successfully", findType });
+    } catch (error) {
+      // return res.status(400).send({ success, error: error })
+      return res.status(400).send(error);
+    }
+  } else {
+    return res.status(400).send({ success, error: "Product not found" });
   }
 };
 
@@ -101,16 +128,124 @@ const deleteProduct = async (req, res) => {
     } else {
       return res
         .status(400)
-        .send({ success: false, msg: "Product Not Found!" });
+        .send({ success: false, message: "Product Not Found!" });
     }
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error!" });
   }
 };
+
+// get user cart info
+const getUserCart = async (req, res) => {
+  const { userId } = req.params;
+  const findUser = await User.findById(userId);
+  if (findUser) {
+    try {
+      const findUserCart = await Cart.find({ user: userId })
+        .populate("productId", "name price image rating type")
+        .populate("user", "name email");
+      res.send(findUserCart);
+    } catch (error) {
+      res.send("Something went wrong");
+    }
+  } else {
+    res.status(400).send("User Not Found");
+  }
+};
+
+// get user wishlist info
+const getUserWishlist = async (req, res) => {
+  const { userId } = req.params;
+  const findUser = await User.findById(userId);
+  if (findUser) {
+    try {
+      const findUserWishlist = await Wishlist.find({ user: userId }).populate(
+        "productId"
+      );
+      res.send(findUserWishlist);
+    } catch (error) {
+      res.send("Something went wrong");
+    }
+  } else {
+    res.status(400).send("User Not Found");
+  }
+};
+
+// get user order info
+const getUserReview = async (req, res) => {
+  const { userId } = req.params;
+  const findUser = await User.findById(userId);
+  if (findUser) {
+    try {
+      const findUserReview = await Review.find({ user: userId })
+        .populate("productId", "name price image rating type")
+        .populate("user", "firstName lastName");
+      res.send(findUserReview);
+    } catch (error) {
+      res.send("Something went wrong");
+    }
+  } else {
+    res.status(400).send("User Not Found");
+  }
+};
+
+// delete user review
+const deleteUserReview = async (req, res) => {
+  const { id } = req.params;
+  try {
+    let deleteReview = await Review.findByIdAndDelete(id);
+    res.send({ message: "Review deleted successfully" });
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: "Something went wrong,Please try again letter", error });
+  }
+};
+
+// delete user cart item
+const deleteUserCartItem = async (req, res) => {
+  const { id } = req.params;
+  try {
+    let deleteCart = await Cart.findByIdAndDelete(id);
+    success = true;
+    res.send({
+      success,
+      message: "Review deleted successfully",
+      deleteCart: deleteCart,
+    });
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: "Something went wrong,Please try again letter1" });
+  }
+};
+
+// delete user wishlist item
+const deleteUserWishlistItem = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    let deleteCart = await Wishlist.findByIdAndDelete(id);
+    success = true;
+    res.send({ success, message: "Review deleted successfully" });
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: "Something went wrong,Please try again letter" });
+  }
+};
+
 module.exports = {
   allUsers,
   getSingleUserInfo,
   createProduct,
   deleteProduct,
   allProducts,
+  getUserCart,
+  deleteUserCartItem,
+  getUserWishlist,
+  getUserReview,
+  deleteUserReview,
+  deleteUserWishlistItem,
+  updateProductDetails,
 };
