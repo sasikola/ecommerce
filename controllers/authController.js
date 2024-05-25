@@ -203,6 +203,7 @@ const adminLogin = async (req, res) => {
       message: "Admin Logged in successfully!",
       token: token,
       userDetails: user,
+      success: true,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
