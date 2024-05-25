@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const initializeAdmin = require("./controllers/adminControllers/admin");
 dotenv.config();
 
 const mongoUrl = process.env.MONGO_URL;
@@ -10,6 +11,7 @@ const db = mongoose.connection;
 
 db.on("connected", function () {
   console.log("Mongoose default connection open to ");
+  initializeAdmin();
 });
 
 db.on("disconnected", function () {

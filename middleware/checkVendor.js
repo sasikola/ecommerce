@@ -1,7 +1,7 @@
 const User = require("../models/User");
 
 
-const checkAdmin = async (req, res, next) => {
+const checkVendor = async (req, res, next) => {
   try {
     const userId = req.user._id;
     console.log(userId);
@@ -15,10 +15,10 @@ const checkAdmin = async (req, res, next) => {
     if (!user) {
       return res.status(404).send({ message: "No User Found", success: false });
     }
-    if (user.userType !== "admin") {
+    if (user.userType !== "vendor") {
       return res
         .status(403)
-        .send({ message: "Access forbidden: Admins only", success: false });
+        .send({ message: "Access forbidden: Vendors only", success: false });
     }
     next();
   } catch (error) {
@@ -27,4 +27,4 @@ const checkAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = checkAdmin;
+module.exports = checkVendor;

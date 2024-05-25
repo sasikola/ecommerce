@@ -21,9 +21,11 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    isAdmin: {
-      default: false,
-      type: Boolean,
+    userType: {
+      type: String,
+      required: [true, "User type is required"],
+      default: "user",
+      enum: ["user", "admin", "vendor"],
     },
     address: {
       type: String,

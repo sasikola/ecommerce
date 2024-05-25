@@ -2,10 +2,7 @@ const express = require("express");
 const {
   allUsers,
   getSingleUserInfo,
-  createProduct,
-  deleteProduct,
   allProducts,
-  updateProductDetails,
   getUserCart,
   deleteUserCartItem,
   getUserWishlist,
@@ -22,9 +19,6 @@ router.get("/geteuser/:userId", getSingleUserInfo);
 
 // product routes
 router.get("/allProducts", allProducts);
-router.post("/addproduct", createProduct);
-router.delete("/deleteproduct/:id", deleteProduct);
-router.put("/updateproduct/:id", updateProductDetails);
 
 // cart routes
 router.get("/getcart/:userId", getUserCart);
