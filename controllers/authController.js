@@ -90,7 +90,6 @@ const userLogin = async (req, res) => {
       success: true,
       userDetails: {
         phone,
-        password,
         name: user.name,
         email: user.email,
         token: token,
