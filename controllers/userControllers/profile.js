@@ -22,9 +22,6 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   try {
     const userData = req.user;
-    res
-      .status(200)
-      .json({ message: "User details updated successfully", user: user });
     const user = await User.findByIdAndUpdate(userData, req.body, {
       new: true,
       runValidators: true,
