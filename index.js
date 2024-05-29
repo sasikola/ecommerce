@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/auth", authRoute);
-app.use("/user", verifyToken, userRoute);
+app.use("/user", userRoute);
 app.use("/admin", verifyToken, checkAdmin, adminRoute);
 app.use("/vendor", verifyToken, checkVendor, vendorRoute);
 

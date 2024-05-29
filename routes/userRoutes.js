@@ -22,8 +22,21 @@ const {
   deleteReview,
   editReview,
 } = require("../controllers/userControllers/review");
+const {
+  getUserProfile,
+  updateUserProfile,
+  updateUserPassword,
+  resetPassword,
+} = require("../controllers/userControllers/profile");
+const verifyToken = require("../middleware/verifyToken");
 
 const router = express.Router();
+
+// user profile routes
+router.get("/profile", verifyToken, getUserProfile);
+router.put("/profile/update", verifyToken, updateUserProfile);
+router.post("/profile/update/password", verifyToken, updateUserPassword);
+router.post("/password/reset", resetPassword);
 
 // Product Routes
 router.get("/allProducts", allProducts);
@@ -33,19 +46,19 @@ router.post("/fetchproduct/category", allCategory);
 router.get("/search/:key", search);
 
 // Cart Routes
-router.post("/addcart", addToCart);
-router.get("/fetchcart", allCartItems);
-router.delete("/deletecart/:id", deleteCartItem);
+router.post("/addcart", verifyToken, addToCart);
+router.get("/fetchcart", verifyToken, allCartItems);
+router.delete("/deletecart/:id", verifyToken, deleteCartItem);
 
 // Wishlist Routes
-router.get("/fetchwishlist", fetchWishlist);
-router.post("/addwishlist", addItemToWishlist);
-router.delete("/deletewishlist/:id", removeItemFromWishlist);
+router.get("/fetchwishlist", verifyToken, fetchWishlist);
+router.post("/addwishlist", verifyToken, addItemToWishlist);
+router.delete("/deletewishlist/:id", verifyToken, removeItemFromWishlist);
 
 // review routes
 router.post("/fetchreview/:id", fetchReviews);
-router.post("/addreview", addReview);
-router.delete("/deletereview/:id", deleteReview);
-router.put("/editreview", editReview);
+router.post("/addreview", verifyToken, addReview);
+router.delete("/deletereview/:id", verifyToken, deleteReview);
+router.put("/editreview", verifyToken, editReview);
 
 module.exports = router;
