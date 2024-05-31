@@ -20,32 +20,31 @@ const addToCart = async (req, res) => {
       res.send(savedCart);
     }
   } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// get all cart products
+const allCartItems = async (req, res) => {
+  try {
+    const cart = await Cart.find({ user: req.user.id })
+      .populate("productId", "name price image rating type")
+      .populate("user", "name email");
+    res.send(cart);
+  } catch (error) {
     res.status(500).send("Internal server error");
   }
 };
 
-
-// get all cart products
-const allCartItems=  async (req, res) => {
-    try {
-      const cart = await Cart.find({ user: req.user.id })
-        .populate("productId", "name price image rating type")
-        .populate("user", "name email");
-      res.send(cart);
-    } catch (error) {
-      res.status(500).send("Internal server error");
-    }
+// remove from cart
+const deleteCartItem = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await Cart.findByIdAndDelete(id);
+    res.send(result);
+  } catch (error) {
+    res.status(500).send("Internal server error");
   }
-
-  // remove from cart
-const deleteCartItem =  async (req, res) => {
-    const { id } = req.params;
-    try {
-      const result = await Cart.findByIdAndDelete(id);
-      res.send(result);
-    } catch (error) {
-      res.status(500).send("Internal server error");
-    }
-  }
+};
 
 module.exports = { addToCart, allCartItems, deleteCartItem };
