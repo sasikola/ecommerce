@@ -4,9 +4,7 @@ const Cart = require("../../models/Cart");
 const addToCart = async (req, res) => {
   try {
     const { _id, quantity } = req.body;
-    const findProduct = await Cart.findOne({
-      $and: [{ productId: _id }, { user: req.user.id }],
-    });
+    const findProduct = await Cart.findOne({ productId: _id });
     if (findProduct) {
       return res.status(400).json({ message: "Product already in cart" });
     } else {
