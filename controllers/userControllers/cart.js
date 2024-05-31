@@ -33,6 +33,7 @@ const allCartItems = async (req, res) => {
       .populate("user", "name email");
     res.send(cart);
   } catch (error) {
+    console.log(error)
     res.status(500).send("Internal server error");
   }
 };
